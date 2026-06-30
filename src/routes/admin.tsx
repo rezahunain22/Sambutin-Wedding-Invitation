@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft, Save, RotateCcw, Plus, Trash2, Download, Upload, Eye, Check,
 } from "lucide-react";
+import * as Icons from "lucide-react";
 import {
   DEFAULT_CONTENT,
   useContent,
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/admin")({
 });
 
 type TabKey =
-  | "branding" | "hero" | "keunggulan" | "fitur" | "portfolio"
+  | "branding" | "hero" | "keunggulan" | "fitur" | "portfolio" | "addon"
   | "process" | "testimoni" | "faq" | "cta" | "kontak" | "footer";
 
 const TABS: { key: TabKey; label: string }[] = [
@@ -32,6 +33,7 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "keunggulan", label: "Keunggulan" },
   { key: "fitur", label: "Fitur" },
   { key: "portfolio", label: "Portfolio" },
+  { key: "addon", label: "Add On" },
   { key: "process", label: "Proses" },
   { key: "testimoni", label: "Testimoni" },
   { key: "faq", label: "FAQ" },
@@ -148,6 +150,7 @@ function AdminPanel() {
         {tab === "keunggulan" && <ListSectionTab section="keunggulan" draft={draft} update={update} fields={[["title","Judul"],["desc","Deskripsi"]]} max={7} note="Item ke-1 dan ke-7 menampilkan layout besar. Item ke-7 berlatar gelap." />}
         {tab === "fitur" && <ListSectionTab section="fitur" draft={draft} update={update} fields={[["title","Judul"],["desc","Deskripsi"]]} max={6} note="Ikon mengikuti urutan: Tamu, Musik, Hati, Hadiah, Video, Kalender." />}
         {tab === "portfolio" && <PortfolioTab draft={draft} update={update} />}
+        {tab === "addon" && <AddOnTab draft={draft} update={update} />}
         {tab === "process" && <ProcessTab draft={draft} update={update} />}
         {tab === "testimoni" && <TestimoniTab draft={draft} update={update} />}
         {tab === "faq" && <FAQTab draft={draft} update={update} />}
@@ -439,8 +442,43 @@ function PortfolioTab({ draft, update }: TabProps) {
             </div>
           </div>
         ))}
-        <button className="add-btn" onClick={() => set({ items: [...p.items, { title: "", cat: p.cats[1] ?? "", date: "" }] })}><Plus size={14} /> Tambah Item</button>
+        <button className="add-btn" onClick={() => set({ items: [...p.items, { title: "", cat: p.cats[1] ?? "", date: "", link: "" }] })}><Plus size={14} /> Tambah Item</button>
         <div className="mt-4"><TextField label="Teks Tombol CTA" value={p.ctaLabel} onChange={(v) => set({ ctaLabel: v })} /></div>
+      </div>
+    </>
+  );
+}
+function AddOnTab({ draft, update }: TabProps) {
+  const a = draft.addon;
+  const set = (patch: Partial<SiteContent["addon"]>) => update("addon", { ...a, ...patch });
+  return (
+    <>
+      <SectionHeaderEditor section={"addon" as any} draft={draft} update={update} />
+      <div className="card">
+        <h2 className="card-title">Tiket Add On</h2>
+        <p className="card-sub">Label besar di atas tiket dan catatan kecil di bawah.</p>
+        <div className="grid-2">
+          <TextField label="Label Tiket" value={a.ticketLabel} onChange={(v) => set({ ticketLabel: v })} />
+        </div>
+        <div className="mt-3"><TextArea label="Catatan" value={a.note} onChange={(v) => set({ note: v })} rows={2} /></div>
+      </div>
+      <div className="card">
+        <h2 className="card-title">Daftar Add On</h2>
+        <p className="card-sub">Nama layanan & harga. Contoh harga: 40K - 60K, 20K, dll.</p>
+        {a.items.map((it, i) => (
+          <div key={i} className="grid grid-cols-[1fr_140px_auto] gap-2 mb-2 items-end">
+            <div>
+              <span className="field-label">Nama</span>
+              <input className="field-input" value={it.name} onChange={(e) => { const n = [...a.items]; n[i] = { ...n[i], name: e.target.value }; set({ items: n }); }} />
+            </div>
+            <div>
+              <span className="field-label">Harga</span>
+              <input className="field-input" value={it.price} onChange={(e) => { const n = [...a.items]; n[i] = { ...n[i], price: e.target.value }; set({ items: n }); }} />
+            </div>
+            <button className="icon-btn" onClick={() => set({ items: a.items.filter((_, j) => j !== i) })}><Trash2 size={14} /></button>
+          </div>
+        ))}
+        <button className="add-btn" onClick={() => set({ items: [...a.items, { name: "", price: "" }] })}><Plus size={14} /> Tambah</button>
       </div>
     </>
   );
@@ -503,17 +541,104 @@ function TestimoniTab({ draft, update }: TabProps) {
         <button className="add-btn" onClick={() => set({ items: [...t.items, { text: "", name: "", meta: "" }] })}><Plus size={14} /> Tambah</button>
       </div>
       <div className="card">
-        <h2 className="card-title">Statistik</h2>
-        <p className="card-sub">Chip di bawah testimoni.</p>
-        {t.stats.map((st, i) => (
-          <div key={i} className="grid grid-cols-[80px_1fr_auto] gap-2 mb-2 items-end">
-            <div><span className="field-label">Ikon</span><input className="field-input text-center" value={st.icon} onChange={(e) => { const n = [...t.stats]; n[i] = { ...n[i], icon: e.target.value }; set({ stats: n }); }} /></div>
-            <div><span className="field-label">Label</span><input className="field-input" value={st.label} onChange={(e) => { const n = [...t.stats]; n[i] = { ...n[i], label: e.target.value }; set({ stats: n }); }} /></div>
-            <button className="icon-btn" onClick={() => set({ stats: t.stats.filter((_, j) => j !== i) })}><Trash2 size={14} /></button>
+  <h2 className="card-title">Statistik</h2>
+  <p className="card-sub">Chip di bawah testimoni.</p>
+
+  {t.stats.map((st, i) => {
+    const PreviewIcon =
+  (Icons[
+    st.icon as keyof typeof Icons
+  ] as React.ElementType) ?? Icons.Star;
+
+    return (
+      <div
+        key={i}
+        className="grid grid-cols-[80px_120px_1fr_auto] gap-2 mb-2 items-end"
+      >
+        {/* Preview Icon */}
+        <div>
+          <span className="field-label">Preview</span>
+          <div className="field-input flex items-center justify-center h-11">
+            <PreviewIcon size={20} />
           </div>
-        ))}
-        <button className="add-btn" onClick={() => set({ stats: [...t.stats, { icon: "⭐", label: "" }] })}><Plus size={14} /> Tambah</button>
+        </div>
+
+        {/* Pilihan Icon */}
+        <div>
+          <span className="field-label">Ikon</span>
+          <select
+            className="field-input"
+            value={st.icon}
+            onChange={(e) => {
+              const n = [...t.stats];
+              n[i] = {
+                ...n[i],
+                icon: e.target.value,
+              };
+              set({ stats: n });
+            }}
+          >
+            <option value="Star">Star</option>
+            <option value="Mail">Mail</option>
+            <option value="Repeat">Repeat</option>
+            <option value="Rocket">Rocket</option>
+            <option value="Heart">Heart</option>
+            <option value="Award">Award</option>
+            <option value="Users">Users</option>
+            <option value="Sparkles">Sparkles</option>
+            <option value="Gift">Gift</option>
+          </select>
+        </div>
+
+        {/* Label */}
+        <div>
+          <span className="field-label">Label</span>
+          <input
+            className="field-input"
+            value={st.label}
+            onChange={(e) => {
+              const n = [...t.stats];
+              n[i] = {
+                ...n[i],
+                label: e.target.value,
+              };
+              set({ stats: n });
+            }}
+          />
+        </div>
+
+        {/* Hapus */}
+        <button
+          className="icon-btn"
+          onClick={() =>
+            set({
+              stats: t.stats.filter((_, j) => j !== i),
+            })
+          }
+        >
+          <Trash2 size={14} />
+        </button>
       </div>
+    );
+  })}
+
+  <button
+    className="add-btn"
+    onClick={() =>
+      set({
+        stats: [
+          ...t.stats,
+          {
+            icon: "Star",
+            label: "",
+          },
+        ],
+      })
+    }
+  >
+    <Plus size={14} /> Tambah
+  </button>
+</div>
     </>
   );
 }
@@ -533,10 +658,10 @@ function FAQTab({ draft, update }: TabProps) {
               <button className="icon-btn" onClick={() => set({ items: f.items.filter((_, j) => j !== i) })}><Trash2 size={14} /></button>
             </div>
             <TextField label="Pertanyaan" value={it.q} onChange={(v) => { const n = [...f.items]; n[i] = { ...n[i], q: v }; set({ items: n }); }} />
-            <div className="mt-2"><TextArea label="Jawaban" value={it.a} onChange={(v) => { const n = [...f.items]; n[i] = { ...n[i], a: v }; set({ items: n }); }} rows={2} /></div>
+            <div className="mt-2"><TextArea label="Jawaban" value={it.a.content} onChange={(v) => { const n = [...f.items]; n[i] = { ...n[i], a: {...n[i].a,content: v, }}; set({ items: n }); }} rows={2} /></div>
           </div>
         ))}
-        <button className="add-btn" onClick={() => set({ items: [...f.items, { q: "", a: "" }] })}><Plus size={14} /> Tambah</button>
+        <button className="add-btn" onClick={() => set({ items: [...f.items, { q: "", a: {type: "text", content: "", }, }] })}><Plus size={14} /> Tambah</button>
       </div>
     </>
   );

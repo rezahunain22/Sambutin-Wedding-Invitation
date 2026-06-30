@@ -6,6 +6,7 @@ import {
   RefreshCw, Send, Instagram, Facebook, ChevronDown, Star, Phone, MapPin,
   Settings,
 } from "lucide-react";
+import * as Icons from "lucide-react";
 import logo from "@/assets/Sambutin-Header.png";
 import heroImg from "@/assets/Sambutin-Hero-Picture.png";
 import port1 from "@/assets/elegant-1.png";
@@ -60,10 +61,12 @@ function LandingPage() {
       <main className="relative z-[1]">
         <Hero content={content} />
         <ScallopStrip />
+        <Portfolio content={content} />
+        <AddOn content={content} />
+        <ScallopStrip flip />
         <Keunggulan content={content} />
         <Fitur content={content} />
         <ScallopStrip flip />
-        <Portfolio content={content} />
         <Process content={content} />
         <ScallopStrip />
         <Testimoni content={content} />
@@ -184,10 +187,10 @@ function ScallopStrip({ flip = false }: { flip?: boolean }) {
       <div className={`scallop-edge ${flip ? "rotate-180" : ""}`} />
       <div className="h-6 bg-primary -mt-px" />
       <div className="bg-primary py-2 overflow-hidden">
-        <div className="flex gap-8 whitespace-nowrap text-primary-foreground/70 font-script text-xl animate-[drift_18s_linear_infinite]">
+        <div className="flex gap-8 whitespace-nowrap text-primary-foreground/70 font-script text-xl animate-drift">
           {Array.from({ length: 8 }).map((_, i) => (
             <span key={i} className="flex items-center gap-8">
-              <span>sambut.in</span> <DiamondTiny className="w-3 h-3 text-primary-foreground/70" /> <span>your love story</span> <DiamondTiny className="w-3 h-3 text-primary-foreground/70" /> <span>elegant invitations</span> <DiamondTiny className="w-3 h-3 text-primary-foreground/70" />
+              <span>sambut.in</span> <DiamondTiny className="w-3 h-3 text-primary-foreground/70" /> <span>sambut.in</span> <DiamondTiny className="w-3 h-3 text-primary-foreground/70" /> <span>sambut.in</span> <DiamondTiny className="w-3 h-3 text-primary-foreground/70" />
             </span>
           ))}
         </div>
@@ -241,7 +244,7 @@ function Navbar({ content }: { content: SiteContent }) {
           <a href={waLink(content)} target="_blank" rel="noreferrer" className="btn-primary w-full !text-xs mt-2">
             <MessageCircle size={15} /> Pesan via WhatsApp
           </a>
-          <Link to="/admin" onClick={() => setOpen(false)} className="btn-outline w-full !text-xs">
+          <Link to="/admin" onClick={() => setOpen(false)} className="hidden">
             <Settings size={14} /> Admin Panel
           </Link>
         </div>
@@ -263,16 +266,15 @@ function Hero({ content }: { content: SiteContent }) {
         <RoseSilhouette className="absolute top-[18%] left-[42%] w-10 h-10 text-primary/40 wiggle" style={{ ["--r" as any]: "-12deg" }} />
         <StarBurst className="absolute top-[8%] right-[28%] w-8 h-8 text-gold drift" style={{ ["--r" as any]: "10deg" }} />
         <RingsDuo className="absolute bottom-[18%] left-[34%] w-12 h-8 text-primary/45 drift" style={{ ["--r" as any]: "8deg", animationDelay: ".8s" }} />
-        <span className="absolute top-[52%] left-[46%] font-script text-primary/70 text-3xl rotate-[-8deg]">love &amp; light</span>
       </div>
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-8 grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-16 items-center">
-        <div className="fade-up">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8 grid gap-12 lg:gap-16 items-center text-center">
+        <div className="fade-up flex flex-col items-center">
           <span className="font-script text-primary text-2xl sm:text-3xl">{h.script}</span>
           <h1 className="mt-4 font-serif text-[2.6rem] sm:text-6xl lg:text-[4.5rem] leading-[1.05] tracking-tight text-foreground">
             {renderTitle(h.title)}
           </h1>
           <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed">{h.subtitle}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3 justify-center">
             <a href={waLink(content)} target="_blank" rel="noreferrer" className="btn-primary">
               <MessageCircle size={18} /> {h.primaryCta}
             </a>
@@ -280,7 +282,7 @@ function Hero({ content }: { content: SiteContent }) {
               <Play size={16} /> {h.secondaryCta}
             </a>
           </div>
-          <ul className="mt-8 flex flex-wrap gap-2.5">
+          <ul className="mt-8 flex flex-wrap gap-2.5 justify-center">
             {h.badges.map((b) => (
               <li key={b} className="chip">
                 <Check size={14} className="text-primary" /> {b}
@@ -288,7 +290,7 @@ function Hero({ content }: { content: SiteContent }) {
             ))}
           </ul>
         </div>
-        <div className="relative h-[480px] sm:h-[560px] lg:h-[620px]">
+        <div className="hidden">
           <div className="absolute inset-6 doodle-circle spin-slow opacity-50" />
           <div className="absolute inset-0 rotate-2 overflow-hidden">
             <img src={heroImg} alt="Undangan digital" className="w-full h-full object-contain" />
@@ -423,6 +425,92 @@ function Portfolio({ content }: { content: SiteContent }) {
   );
 }
 
+/* ---------------- ADD ON (paper ticket) ---------------- */
+function AddOn({ content }: { content: SiteContent }) {
+  const a = content.addon;
+  return (
+    <section id="addon" className="relative py-24 sm:py-32 bg-[oklch(0.78_0.05_25)]">
+      <SectionDecor variant="portfolio" />
+      <div className="relative mx-auto max-w-3xl px-5 sm:px-8">
+        <SectionHead
+          eyebrow={a.eyebrow}
+          title={renderTitle(a.title)}
+          subtitle={a.subtitle}
+        />
+        <div className="mt-14 mx-auto max-w-md ticket relative rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+          {/* Header */}
+          <div className="px-8 sm:px-10 pt-10 pb-6 text-center">
+            <h3 className="font-serif font-black text-[3.5rem] sm:text-[4.5rem] leading-none tracking-tight text-primary uppercase">
+              {a.ticketLabel}
+            </h3>
+          </div>
+
+          {/* Perforation */}
+          <div className="relative" aria-hidden>
+            <div className="absolute -left-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-[oklch(0.78_0.05_25)]" />
+            <div className="absolute -right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-[oklch(0.78_0.05_25)]" />
+            <div className="mx-8 sm:mx-10 border-t border-dashed border-primary/40" />
+          </div>
+
+          {/* Items */}
+          <ul className="px-8 sm:px-10 py-8 space-y-5 font-mono">
+            {a.items.map((it, i) => (
+              <li
+                key={i}
+                className="flex items-baseline gap-3 text-[13px] sm:text-sm uppercase tracking-[0.12em] text-primary/90"
+              >
+                <span className="shrink-0">{it.name}</span>
+                <span
+                  aria-hidden
+                  className="flex-1 self-end border-b border-dotted border-primary/30 translate-y-[-4px]"
+                />
+                <span className="shrink-0 font-semibold text-primary">{it.price}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {a.note && (
+          <p className="mt-8 text-center text-xs text-foreground/70 max-w-md mx-auto italic">
+            {a.note}
+          </p>
+        )}
+
+        <div className="mt-8 text-center">
+          <a
+            href={waLink(content, "Halo Sambutin.id, saya ingin tahu lebih lanjut tentang Add On undangan digital.")}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary"
+          >
+            <MessageCircle size={16} /> Konsultasi Sekarang
+          </a>
+        </div>
+      </div>
+
+      <style>{`
+        .ticket{
+          background: oklch(0.985 0.005 60);
+          color: var(--primary);
+          box-shadow: 0 30px 60px -20px oklch(0.30 0.10 20 / .45), 0 8px 20px -10px oklch(0.30 0.10 20 / .35);
+          --scallop: radial-gradient(circle at 10px 6px, transparent 6px, #000 6.5px);
+          -webkit-mask:
+            radial-gradient(circle 7px at 10px 0, transparent 98%, #000 100%) top left/20px 8px repeat-x,
+            radial-gradient(circle 7px at 10px 100%, transparent 98%, #000 100%) bottom left/20px 8px repeat-x,
+            linear-gradient(#000, #000);
+          -webkit-mask-composite: source-over;
+          mask:
+            radial-gradient(circle 7px at 10px 0, transparent 98%, #000 100%) top left/20px 8px repeat-x,
+            radial-gradient(circle 7px at 10px 100%, transparent 98%, #000 100%) bottom left/20px 8px repeat-x,
+            linear-gradient(#000, #000);
+          padding-top: 8px;
+          padding-bottom: 8px;
+        }
+      `}</style>
+    </section>
+  );
+}
+
 /* ---------------- PROCESS ---------------- */
 function Process({ content }: { content: SiteContent }) {
   const p = content.process;
@@ -509,12 +597,22 @@ function Testimoni({ content }: { content: SiteContent }) {
           </div>
         )}
         <div className="mt-16 flex flex-wrap justify-center gap-3">
-          {t.stats.map((s) => (
-            <div key={s.label} className="chip !px-5 !py-3 text-sm">
-              <s.icon className="w-5 h-5" />
-              <span className="font-semibold">{s.label}</span>
-            </div>
-          ))}
+          {t.stats.map((s) => {
+            const Icon =
+              Icons[s.icon as keyof typeof Icons] ?? Icons.Star;
+
+            return (
+              <div
+                key={s.label}
+                className="chip !px-5 !py-3 text-sm"
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-semibold">
+                  {s.label}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -525,7 +623,7 @@ function Testimoni({ content }: { content: SiteContent }) {
 /* ---------------- FAQ ---------------- */
 function FAQ({ content }: { content: SiteContent }) {
   const f = content.faq;
-  const [open, setOpen] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(null);
   return (
     <section id="faq" className="relative py-24 sm:py-32 bg-secondary/20">
       <SectionDecor variant="faq" />

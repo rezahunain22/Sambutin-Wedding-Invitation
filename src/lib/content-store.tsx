@@ -15,6 +15,7 @@ export type TestimoniItem = { text: string; name: string; meta: string; image?: 
 export type FAQItem = { q: string; 
   a:  | { type: "text"; content: string }
       | { type: "list"; content: string[] }; };
+export type AddOnItem = { name: string; price: string };
 
 export type SiteContent = {
   branding: {
@@ -52,8 +53,18 @@ export type SiteContent = {
     cats: string[];
     items: PortfolioItem[];
     ctaLabel: string;
-    link: string;
   };
+
+
+  addon: {    
+    eyebrow: string;
+    title: TitleParts;
+    subtitle: string;
+    ticketLabel: string;
+    items: AddOnItem[];
+    note: string;
+  };
+
   process: {
     eyebrow: string;
     title: TitleParts;
@@ -65,7 +76,7 @@ export type SiteContent = {
     title: TitleParts;
     subtitle: string;
     items: TestimoniItem[];
-    stats: { icon: LucideIcon; label: string }[];
+    stats: { icon: string; label: string }[];
   };
   faq: {
     eyebrow: string;
@@ -160,7 +171,7 @@ export const DEFAULT_CONTENT: SiteContent = {
   },
   portfolio: {
     eyebrow: "Portfolio",
-    title: { pre: "Kisah yang Sudah Kami ", em: "Bingkai", post: "", links:"view ↗" },
+    title: { pre: "Kisah yang Sudah Kami ", em: "Bingkai", post: ""},
     subtitle: "Ratusan undangan digital yang telah kami rancang untuk pasangan istimewa di seluruh Indonesia.",
     cats: ["Semua", "Elegant", "Monochrome", "Doodle", "Flowy", "Ethnic"],
     items: [
@@ -172,6 +183,21 @@ export const DEFAULT_CONTENT: SiteContent = {
     ],
     ctaLabel: "Lihat Semua Portfolio",
   },
+
+  addon: {
+   eyebrow: "Add On",
+    title: { pre: "Sesuaikan ", em: "Undanganmu", post: " Sesukamu" },
+    subtitle: "Tambahkan layanan ekstra agar undangan digitalmu makin spesial.",
+    ticketLabel: "Add On",
+    items: [
+      { name: "Fast Track", price: "40K - 60K" },
+      { name: "Ganti Warna", price: "20K" },
+      { name: "Tambah Foto (5)", price: "10K" },
+      { name: "Tambah Link", price: "50K" },
+      { name: "Masa Aktif", price: "20K - 100K" },
+      { name: "Revisi Major", price: "10K - 50K" },    ],
+   note: "Harga sewaktu-waktu dapat berubah. Konsultasikan via WhatsApp untuk penawaran terbaik.",  },
+
   process: {
     eyebrow: "Proses",
     title: { pre: "Proses yang Mudah dan ", em: "Cepat", post: "" },
@@ -194,10 +220,10 @@ export const DEFAULT_CONTENT: SiteContent = {
       { text: "Pelayanan prima, harga terjangkau, hasil memuaskan. Sudah 3x pakai Sambutin.id untuk acara keluarga.", name: "Ahmad Fauzi", meta: "Akad Nikah · Agu 2024" },
     ],
     stats: [
-      { icon: Star, label: "4.9/5 Rating" },
-      { icon: Mail, label: "500+ Undangan" },
-      { icon: Repeat, label: "80% Repeat Client" },
-      { icon: Rocket, label: "Respon Cepat" },
+      { icon: "Star", label: "4.9/5 Rating" },
+      { icon: "Mail", label: "500+ Undangan" },
+      { icon: "Repeat", label: "80% Repeat Client" },
+      { icon: "Rocket", label: "Respon Cepat" },
     ],
   },
   faq: {
